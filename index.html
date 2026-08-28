@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBF Viewer. Barbados</title>
+<meta name="description" content="Impact-based flood forecast viewer for Barbados. Per forecast cycle warning maps for the Saint Thomas pilot, built on the TITO FIM ensemble products.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23F58220'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="landing-body">
+
+<header class="site-head">
+  <div class="wrap head-row">
+    <div>
+      <h1>Impact-Based Flood Forecast Viewer</h1>
+      <p class="head-sub">Barbados. Flash flood and urban flood early warning, IBF component.</p>
+    </div>
+    <div class="head-meta">
+      <span>AHWA Laboratory, University of Iowa</span>
+      <span>EWS-F project, funded by the WMO, 2026</span>
+      <span><a href="https://ahwalab.github.io/Barbados_fim/">Flood maps</a> &nbsp; <a href="https://ahwalab.github.io/Barbados_warnings/">Flood potential</a></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap landing">
+  <p class="landing-intro">
+    These maps combine <strong>flood likelihood</strong> from the ensemble flood map library
+    with <strong>potential impact severity</strong> for every building, road segment and
+    enumeration district. The warning colour of each feature comes from the Flood Risk Matrix
+    of the Scottish Flood Forecasting Service and the UK Flood Guidance Statement, as applied
+    operationally in Speight et al. (2018). Green means business as usual, yellow be aware,
+    amber be prepared, red take action with danger to life.
+  </p>
+
+  <div class="portal-grid">
+    <a class="portal-card" href="saint-thomas/">
+      <span class="portal-lang">Per forecast cycle</span>
+      <span class="portal-title">Saint Thomas, 17 August 2026</span>
+      <span class="portal-desc">Three cycles: 13:00, 14:00 and 16:00 UTC. 27,836 buildings,
+        3,486 road segments and 99 enumeration districts scored against the matrix on every
+        cycle. The 13:00 cycle carries the only red building of the event; 14:00 has the widest
+        amber footprint with 36 buildings and 13 road segments.</span>
+      <span class="portal-go">Open the map</span>
+    </a>
+    <a class="portal-card" href="methods/">
+      <span class="portal-lang">Documentation</span>
+      <span class="portal-title">Method and data note</span>
+      <span class="portal-desc">The adopted standard, the severity and likelihood rules, how
+        the receptor stock and census population were built for Barbados, and what stays open
+        for the next iteration.</span>
+      <span class="portal-go">Read the note</span>
+    </a>
+  </div>
+
+  <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:0.06em;color:#5b6770;margin:26px 0 10px">The warning standard</h3>
+  <table style="border-collapse:collapse;font-size:12px">
+    <tr><th style="padding:5px 10px;color:#5b6770;text-align:left">Likelihood \ Severity</th>
+      <th style="padding:5px 10px;color:#5b6770">Minimal</th><th style="padding:5px 10px;color:#5b6770">Minor</th>
+      <th style="padding:5px 10px;color:#5b6770">Significant</th><th style="padding:5px 10px;color:#5b6770">Severe</th></tr>
+    <tr><th style="padding:5px 10px;color:#5b6770;text-align:left">High, over 60 percent</th>
+      <td style="background:#63BE5F;width:92px;height:30px"></td><td style="background:#FFD500"></td>
+      <td style="background:#F58220"></td><td style="background:#DA291C"></td></tr>
+    <tr><th style="padding:5px 10px;color:#5b6770;text-align:left">Medium, 40 to 60</th>
+      <td style="background:#63BE5F;height:30px"></td><td style="background:#FFD500"></td>
+      <td style="background:#F58220"></td><td style="background:#F58220"></td></tr>
+    <tr><th style="padding:5px 10px;color:#5b6770;text-align:left">Low, 20 to 40</th>
+      <td style="background:#63BE5F;height:30px"></td><td style="background:#FFD500"></td>
+      <td style="background:#FFD500"></td><td style="background:#F58220"></td></tr>
+    <tr><th style="padding:5px 10px;color:#5b6770;text-align:left">Very low, under 20</th>
+      <td style="background:#63BE5F;height:30px"></td><td style="background:#63BE5F"></td>
+      <td style="background:#FFD500"></td><td style="background:#FFD500"></td></tr>
+  </table>
+  <p class="landing-note" style="margin-top:12px">
+    Severity is graded on the depth a receptor reaches: minor from 0.10 m, significant from
+    0.30 m, severe from 0.70 m. Rows are the likelihood bands of the Flood Guidance Statement.
+    Overall district risk aggregates its receptors and is then read against the same matrix.
+  </p>
+
+  <p class="landing-note">
+    Companion products for the same event:
+    <a href="https://ahwalab.github.io/Barbados_fim/">the FIM results viewer</a> shows the likelihood grids these warnings
+    are computed from, and <a href="https://ahwalab.github.io/Barbados_warnings/">the UQ flood potential viewer</a> shows the
+    island wide hydrological guidance that decides whether a FIM cycle runs at all.
+  </p>
+</div>
+
+<footer class="site-foot landing-foot">
+  <div class="wrap foot-row">
+    <div>
+      <strong>AHWA Laboratory, The University of Iowa</strong><br>
+      EWS-F project, funded by the WMO
+    </div>
+    <div class="foot-right">
+      Standard: Speight et al. (2018), SEPA and Met Office FGS user guide (2015),<br>
+      WMO No. 1150 guidelines on impact-based forecast and warning services.
+    </div>
+  </div>
+</footer>
+</body>
+</html>

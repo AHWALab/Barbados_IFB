@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBF Method Note. Barbados</title>
+<meta name="description" content="Method and data note for the Barbados impact-based flood forecast product: standard, severity and likelihood rules, receptor stock, population, and open items.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23F58220'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body class="landing-body">
+
+<header class="site-head">
+  <div class="wrap head-row">
+    <div>
+      <h1>Method and data note</h1>
+      <p class="head-sub">Impact-based flood forecast, Barbados, Saint Thomas pilot</p>
+    </div>
+    <div class="head-meta">
+      <span>Version for the Barbados training, August 2026</span>
+      <span><a href="../">IBF viewer home</a> &nbsp; <a href="../saint-thomas/">The map</a></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap landing doc">
+
+  <h2>1. What this product is</h2>
+  <p>For every forecast cycle in which the flood inundation mapping (FIM) routine issues
+  products, the impact-based forecasting (IBF) routine scores each receptor in the Saint Thomas
+  window against a likelihood by impact matrix and returns a warning colour. The output is a
+  map a forecaster or a responder can act on, together with a table of counts per district.
+  It is produced from the same ensemble the FIM viewer displays, so the two are always
+  consistent with each other.</p>
+
+  <h2>2. The adopted standard</h2>
+  <p>The product follows Speight et al. (2018), <em>Journal of Flood Risk Management</em>
+  11:S884 to S901, the Glasgow operational surface water pilot, whose framework is the Scottish
+  Flood Forecasting Service and UK Flood Guidance Statement standard. Warning level is
+  likelihood multiplied by potential impact severity, rendered green, yellow, amber and red for
+  overall risk very low, low, medium and high.</p>
+
+  <h3>Likelihood</h3>
+  <p>Likelihood comes from the FIM exceedance probabilities, that is the share of the 50
+  ensemble members whose matched flood scenario reaches a given depth at that pixel. Bands
+  follow the Flood Guidance Statement user guide: very low under 20 percent, low 20 to 40,
+  medium 40 to 60, high above 60, with a 5 percent reporting threshold.</p>
+
+  <h3>Severity</h3>
+  <table>
+    <tr><th>Receptor</th><th>Minimal</th><th>Minor</th><th>Significant</th><th>Severe</th></tr>
+    <tr><td>Buildings</td><td>under 0.10 m</td><td>0.10 to 0.30 m</td><td>0.30 to 0.70 m</td><td>0.70 m and above</td></tr>
+    <tr><td>Roads</td><td>under 0.10 m</td><td>0.10 to 0.30 m</td><td>0.30 to 0.50 m</td><td>0.50 m and above</td></tr>
+  </table>
+  <p>The severity depths are the same for every country in the project, and equal to the first
+  three FIM depth thresholds. A receptor takes the worst matrix cell across its severity
+  specific probabilities, so a low probability of severe flooding is visible as amber rather
+  than disappearing behind a single cutoff. The fourth FIM product, 1.00 m, is sampled onto
+  every receptor as its own column but is not a severity anchor, because the matrix has three
+  impact classes above minimal.</p>
+
+  <h2>3. Receptors and population for Barbados</h2>
+  <table>
+    <tr><th>Layer</th><th>Source</th><th>In the Saint Thomas window</th></tr>
+    <tr><td>Buildings</td><td>Overture Maps, downloaded by country bounding box</td><td>27,836 of 204,764 national</td></tr>
+    <tr><td>Roads</td><td>Overture Maps, motorway to unclassified</td><td>3,486 segments of 31,312 national</td></tr>
+    <tr><td>Admin units</td><td>2010 census enumeration districts with TOT_PERS population</td><td>99 of 609 national</td></tr>
+    <tr><td>Functional class</td><td>GHS BUILT-C FUN E2018 R2023A, 10 m</td><td>residential, non residential, other</td></tr>
+  </table>
+  <p>Census population is allocated to buildings by footprint area weighted with the GHS
+  functional class, computed over whole districts so that clipping to the forecast window
+  cannot re-inflate the totals. The enumeration district layer is preferred over the parish
+  layer because it resolves impact at a scale a responder can use, and because intersecting
+  districts cover far less area than whole parishes, which halves the receptor cache build.</p>
+  <p>Only 1.4 to 4 percent of Overture buildings in the islands carry a subtype, so the
+  functional class raster, not the attribute, does most of the work in separating residential
+  from non residential stock. Critical facilities are flagged where a subtype exists.</p>
+
+  <h2>4. What the routine does per cycle</h2>
+  <ol>
+    <li>Read the four probability grids written by the FIM routine for that cycle.</li>
+    <li>Build the receptor window from the product raster plus a 250 m buffer, applied in
+      metres after reprojection.</li>
+    <li>Sample each probability grid onto every building, road segment and district with
+      exact extract maximum semantics.</li>
+    <li>Grade severity from the depth thresholds, read likelihood from the probability bands,
+      and take the worst matrix cell.</li>
+    <li>Aggregate to districts through the reporting thresholds, then read the district against
+      the same matrix.</li>
+    <li>Write a GeoPackage with the three classified layers, a district summary table and a
+      JSON summary.</li>
+  </ol>
+
+  <h2>5. Results for this event</h2>
+  <table>
+    <tr><th>Cycle, UTC</th><th>Buildings yellow</th><th>Buildings amber</th><th>Buildings red</th><th>Roads yellow or worse</th><th>Districts medium</th><th>People at yellow or worse</th></tr>
+    <tr><td>17 Aug 13:00</td><td>247</td><td>13</td><td>1</td><td>59</td><td>4</td><td>430</td></tr>
+    <tr><td>17 Aug 14:00</td><td>214</td><td>36</td><td>0</td><td>57</td><td>14</td><td>379</td></tr>
+    <tr><td>17 Aug 16:00</td><td>231</td><td>4</td><td>0</td><td>57</td><td>1</td><td>394</td></tr>
+  </table>
+  <p>The run also wrote flood maps for 17 August 15:00, but those rasters are on the Saint
+  Michael window rather than Saint Thomas, so that cycle is excluded here. See the window audit
+  in the build folder.</p>
+  <p>This is a small event and the product is correctly quiet. No district reaches high overall
+  risk in any cycle. The value of the sequence for training is that it shows a warning footprint
+  that grows, peaks and recedes over four hours, and that the peak in <em>impact</em> at 14:00
+  does not fall on the same cycle as the single most severe <em>receptor</em>, at 13:00.</p>
+
+  <h2>6. Open items</h2>
+  <ul>
+    <li>The census population vintage is 2010 for the enumeration districts, while the parish
+      layer carries 2021 Barbados Statistical Service estimates. The two are not mixed in one
+      product; the vintage difference should be resolved with the national partners.</li>
+    <li>Velocity is not available for these cycles, so the flood hazard rating upgrade used in
+      the earlier island wide scenario product is not applied here.</li>
+    <li>Critical facility coverage depends on Overture subtypes, which are sparse in Barbados.
+      A national layer of health facilities, schools and emergency services would activate the
+      community services thresholds of the standard.</li>
+    <li>Road classes are carried but not yet weighted, so a trunk road and a residential street
+      of the same depth take the same colour.</li>
+  </ul>
+
+</div>
+
+<footer class="site-foot landing-foot">
+  <div class="wrap foot-row">
+    <div>
+      <strong>AHWA Laboratory, The University of Iowa</strong><br>
+      EWS-F project, funded by the WMO
+    </div>
+    <div class="foot-right">
+      Standard: Speight et al. (2018); SEPA and Met Office FGS user guide (2015);<br>
+      EA and HR Wallingford flood hazard rating; WMO No. 1150 IBF guidelines.
+    </div>
+  </div>
+</footer>
+</body>
+</html>

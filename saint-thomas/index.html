@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBF Map. Saint Thomas, Barbados</title>
+<meta name="description" content="Impact-based flood forecast for Saint Thomas, Barbados, per forecast cycle. Buildings, road segments and enumeration districts coloured by the flood risk matrix.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23F58220'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/vendor/leaflet.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-row">
+    <div>
+      <h1>Impact-Based Flood Forecast</h1>
+      <p class="head-sub">Saint Thomas, Barbados. One map per forecast cycle.</p>
+    </div>
+    <div class="head-meta">
+      <span>Event of 17 August 2026, cycles 13:00, 14:00 and 16:00 UTC</span>
+      <span>27,836 buildings, 3,486 road segments, 99 enumeration districts</span>
+      <span><a href="../">IBF viewer home</a> &nbsp; <a href="../methods/">Method</a></span>
+    </div>
+  </div>
+</header>
+
+<div class="context-band">
+  <div class="wrap">
+    Warning colour comes from the Flood Risk Matrix of the Scottish Flood Forecasting Service
+    and the UK Flood Guidance Statement, as applied in Speight et al. (2018): likelihood from
+    the FIM ensemble exceedance grids, impact severity from the depth reached at each receptor.
+    Green is business as usual, yellow be aware, amber be prepared, red take action.
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="controls" aria-label="View controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Show at least</span>
+      <div class="seg" id="seg-min">
+        <button data-m="1" class="on">Yellow and above</button>
+        <button data-m="2">Amber and above</button>
+        <button data-m="3">Red only</button>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Layers</span>
+      <button class="toggle on" id="t-admin">Districts</button>
+      <button class="toggle on" id="t-bld">Buildings</button>
+      <button class="toggle on" id="t-rds">Roads</button>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Cycle</span>
+      <button class="step" id="prev" title="Previous cycle">&lt;</button>
+      <select id="cycsel" class="picker" aria-label="Forecast cycle"></select>
+      <button class="step" id="next" title="Next cycle">&gt;</button>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="map-col">
+      <div class="mapbox" id="mapbox"><div id="map"></div></div>
+      <div class="map-caption">Buildings are drawn at their representative point so several
+        thousand can be read at once. Click any feature for its probabilities and severity.</div>
+    </div>
+
+    <aside class="side">
+      <div class="cyc-head">
+        <h2 id="cyctitle"></h2>
+        <span class="badge trig">receptor product</span>
+      </div>
+      <dl class="kv" id="kv"></dl>
+      <table class="st" id="sttable"></table>
+      <p class="note"><strong>Severity</strong> is graded on the depth a receptor reaches:
+        minor from 0.10 m, significant from 0.30 m, severe from 0.70 m. <strong>Likelihood</strong>
+        is the exceedance probability at that depth, in the bands very low under 20 percent,
+        low 20 to 40, medium 40 to 60, high above 60. A receptor takes the worst matrix cell
+        across its severity specific probabilities. District risk aggregates its receptors and
+        is then read against the same matrix.</p>
+      <div class="flag">
+        <strong>Three cycles, not four.</strong> The flood inundation run also wrote products
+        for 17 August 15:00, but those rasters are on the Saint Michael window, not Saint
+        Thomas, so they are not sampled onto this receptor stock. The FIM viewer shows that
+        cycle, badged, on its own window.
+      </div>
+      <div class="flag">
+        <strong>Scope.</strong> The receptor window is the Saint Thomas FIM domain plus a
+        250 m buffer, so counts describe that window, not the whole parish or the island.
+        Population is the 2010 census total for each enumeration district, disaggregated to
+        buildings by footprint area weighted with the GHS BUILT-C functional class. The
+        likelihood cutoff for the district flags is 0.50.
+      </div>
+    </aside>
+  </main>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap foot-row">
+    <div>
+      <strong>AHWA Laboratory, The University of Iowa</strong><br>
+      EWS-F project, funded by the WMO
+    </div>
+    <div class="foot-right">
+      Receptors from Overture Maps, admin units from the 2010 census enumeration districts.<br>
+      Training demonstration. Not an operational warning product.
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/vendor/leaflet.js"></script>
+<script src="../assets/data/ibf_cycles.js"></script>
+<script src="../assets/js/ibf.js"></script>
+</body>
+</html>
