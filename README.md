@@ -1,8 +1,7 @@
-# Barbados_IFB
+# IBF Viewer: Barbados
 
-Impact based flood forecast maps for the Saint Thomas pilot, Barbados, one map per forecast
-cycle, produced by `tito_utils.ibf_utils` from the FIM ensemble probability products of the same
-cycles.
+Impact-based flood forecast maps for the Saint Thomas pilot, one map per forecast cycle, built
+by `tito_utils.ibf_utils` on the FIM ensemble probability products of the same cycles.
 
 **Live site:** https://ahwalab.github.io/Barbados_IFB/
 
@@ -10,7 +9,7 @@ Companion products:
 [flood maps](https://ahwalab.github.io/Barbados_fim/) and
 [flood potential](https://ahwalab.github.io/Barbados_warnings/).
 
-## Layout
+## Contents
 
     index.html                     landing page with the flood risk matrix
     saint-thomas/index.html        the per cycle warning map
@@ -33,7 +32,7 @@ cutoff.
 Overture Maps buildings and roads downloaded by country bounding box, the 2010 census
 enumeration districts with TOT_PERS population, and the GHS BUILT-C functional class raster for
 the dasymetric population weights. In the Saint Thomas window: 27,836 buildings, 3,486 road
-segments, 99 of the 609 national enumeration districts.
+segments, 99 enumeration districts.
 
 ## Cycles
 
@@ -47,10 +46,21 @@ is excluded here and flagged in the FIM viewer.
 | 14:00 | 214 | 36 | 0 | 57 | 14 | 379 |
 | 16:00 | 231 | 4 | 0 | 57 | 1 | 394 |
 
-No district reaches high overall risk in any cycle. This is a small event and the product is
-correctly quiet. What makes the sequence useful for training is that the warning footprint grows,
-peaks and recedes over four hours, and that the peak in impact at 14:00 does not fall on the same
-cycle as the single most severe receptor, at 13:00.
+## Basemap key
+
+CARTO raster basemaps have required an API key since August 2026. The key issued to the
+University of Iowa sits near the top of `assets/js/ibf.js` as `CARTO_KEY`, and the light basemap URL is
+built from it:
+
+    https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=CARTO_KEY
+
+It is a browser side key, so it is visible in the source by design. CARTO restricts it to
+`ahwalab.github.io` and `localhost`, and that restriction is what protects it. To rotate it,
+replace the value in that one line, here and in the other two viewer repositories. CARTO and
+OpenStreetMap attribution must stay visible on the map, and it is printed in the bottom right
+corner of every map.
+
+The satellite layer is Esri World Imagery and needs no key.
 
 ## Local preview
 
