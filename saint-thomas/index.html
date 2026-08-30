@@ -19,7 +19,7 @@
     </div>
     <div class="head-meta">
       <span>Event of 17 August 2026, cycles 13:00, 14:00 and 16:00 UTC</span>
-      <span>27,836 buildings, 3,486 road segments, 99 enumeration districts</span>
+      <span>27,836 buildings, 3,486 road segments, 99 enumeration districts, 51 critical facilities</span>
       <span><a href="../">IBF viewer home</a> &nbsp; <a href="../methods/">Method</a></span>
     </div>
   </div>
@@ -49,6 +49,7 @@
       <button class="toggle on" id="t-admin">Districts</button>
       <button class="toggle on" id="t-bld">Buildings</button>
       <button class="toggle on" id="t-rds">Roads</button>
+      <button class="toggle on" id="t-fac" title="Health, education and civic facilities from the OpenStreetMap extract">Facilities</button>
     </div>
     <div class="ctl-group">
       <span class="ctl-label">Cycle</span>
@@ -83,6 +84,13 @@
         for 17 August 15:00, but those rasters are on the Saint Michael window, not Saint
         Thomas, so they are not sampled onto this receptor stock. The FIM viewer shows that
         cycle, badged, on its own window.
+      </div>
+      <div class="flag">
+        <strong>Critical facilities.</strong> Health, education and civic facilities come from
+        the OpenStreetMap extract of 6 April 2026, mapped onto the Overture footprints where a
+        facility falls inside a building or within 25 m of one. In this window that is 51 named
+        facilities and 49 flagged buildings, against 35 identifiable from the Overture attributes
+        alone. None of them reaches yellow in any cycle of this event.
       </div>
       <div class="flag">
         <strong>Scope.</strong> The receptor window is the Saint Thomas FIM domain plus a

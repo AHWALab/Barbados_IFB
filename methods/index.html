@@ -66,6 +66,7 @@
     <tr><td>Roads</td><td>Overture Maps, motorway to unclassified</td><td>3,486 segments of 31,312 national</td></tr>
     <tr><td>Admin units</td><td>2010 census enumeration districts with TOT_PERS population</td><td>99 of 609 national</td></tr>
     <tr><td>Functional class</td><td>GHS BUILT-C FUN E2018 R2023A, 10 m</td><td>residential, non residential, other</td></tr>
+    <tr><td>Critical facilities</td><td>OpenStreetMap extract, 6 April 2026, POI layer</td><td>51 named of 366 national</td></tr>
   </table>
   <p>Census population is allocated to buildings by footprint area weighted with the GHS
   functional class, computed over whole districts so that clipping to the forecast window
@@ -74,7 +75,24 @@
   districts cover far less area than whole parishes, which halves the receptor cache build.</p>
   <p>Only 1.4 to 4 percent of Overture buildings in the islands carry a subtype, so the
   functional class raster, not the attribute, does most of the work in separating residential
-  from non residential stock. Critical facilities are flagged where a subtype exists.</p>
+  from non residential stock.</p>
+
+  <h3>Critical facilities</h3>
+  <p>Critical facilities were previously limited to whatever the Overture subtype happened to
+  record, which identified 35 buildings in this window. They now come from the POI layer of an
+  OpenStreetMap extract dated 6 April 2026, which carries an amenity tag on every one of its
+  1,627 points and polygons. Health, education and civic amenities are mapped onto the project
+  subtype vocabulary and joined to the Overture footprints: a facility inside a building takes
+  that building, otherwise the nearest building within 25 m. Nationally that is 366 facilities,
+  343 of which match a footprint; in this window it is 51 named facilities and 49 flagged
+  buildings, a gain of 14 over the Overture attributes alone.</p>
+  <p>The same extract also holds buildings and roads, and they were examined and not adopted.
+  Its 149,553 building footprints are a quarter fewer than the 204,764 in the Overture layer,
+  and 96.5 percent of them carry only <em>building=yes</em>, so a swap would have lost coverage
+  and gained no usable attribute. Its 21,447 road segments are likewise fewer than the 31,312
+  in use. Places of worship, 257 nationally, are classified as religious rather than critical,
+  because designating a church as a shelter is a national decision and not an attribute of the
+  map data.</p>
 
   <h2>4. What the routine does per cycle</h2>
   <ol>
@@ -93,10 +111,10 @@
 
   <h2>5. Results for this event</h2>
   <table>
-    <tr><th>Cycle, UTC</th><th>Buildings yellow</th><th>Buildings amber</th><th>Buildings red</th><th>Roads yellow or worse</th><th>Districts medium</th><th>People at yellow or worse</th></tr>
-    <tr><td>17 Aug 13:00</td><td>247</td><td>13</td><td>1</td><td>59</td><td>4</td><td>430</td></tr>
-    <tr><td>17 Aug 14:00</td><td>214</td><td>36</td><td>0</td><td>57</td><td>14</td><td>379</td></tr>
-    <tr><td>17 Aug 16:00</td><td>231</td><td>4</td><td>0</td><td>57</td><td>1</td><td>394</td></tr>
+    <tr><th>Cycle, UTC</th><th>Buildings yellow</th><th>Buildings amber</th><th>Buildings red</th><th>Roads yellow or worse</th><th>Districts medium</th><th>People at yellow or worse</th><th>Critical facilities at yellow or worse</th></tr>
+    <tr><td>17 Aug 13:00</td><td>247</td><td>13</td><td>1</td><td>59</td><td>4</td><td>431</td><td>0 of 49</td></tr>
+    <tr><td>17 Aug 14:00</td><td>214</td><td>36</td><td>0</td><td>57</td><td>14</td><td>380</td><td>0 of 49</td></tr>
+    <tr><td>17 Aug 16:00</td><td>231</td><td>4</td><td>0</td><td>57</td><td>1</td><td>395</td><td>0 of 49</td></tr>
   </table>
   <p>The run also wrote flood maps for 17 August 15:00, but those rasters are on the Saint
   Michael window rather than Saint Thomas, so that cycle is excluded here. See the window audit
@@ -113,9 +131,14 @@
       product; the vintage difference should be resolved with the national partners.</li>
     <li>Velocity is not available for these cycles, so the flood hazard rating upgrade used in
       the earlier island wide scenario product is not applied here.</li>
-    <li>Critical facility coverage depends on Overture subtypes, which are sparse in Barbados.
-      A national layer of health facilities, schools and emergency services would activate the
-      community services thresholds of the standard.</li>
+    <li>Critical facilities are now carried, from the OpenStreetMap extract, but the coverage is
+      what volunteers have mapped rather than an official register. A national list of health
+      facilities, schools and emergency services from the Barbados authorities would replace it
+      and would let the community services thresholds of the standard be applied with
+      confidence.</li>
+    <li>Whether places of worship should count as critical, given their use as shelters in the
+      Caribbean, is a question for the national partners. They are carried as religious and are
+      not currently critical.</li>
     <li>Road classes are carried but not yet weighted, so a trunk road and a residential street
       of the same depth take the same colour.</li>
   </ul>

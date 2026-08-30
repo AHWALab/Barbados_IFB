@@ -8,8 +8,10 @@ var CY = D.cycles;
 var LEVELS = ["VERY LOW", "LOW", "MEDIUM", "HIGH"];
 var LCOL = ["#63BE5F", "#FFD500", "#F58220", "#DA291C"];
 
-var idx = CY.length - 1, minClass = 1, showAdmin = true, showBld = true, showRds = true;
-var map, adminLayer, bldLayer, rdLayer;
+var idx = CY.length - 1, minClass = 1, showAdmin = true, showBld = true, showRds = true,
+    showFac = true;
+var map, adminLayer, bldLayer, rdLayer, facLayer;
+var FAC_LABEL = { medical: "Health", education: "Education", civic: "Civic and emergency" };
 var adminById = {};
 
 function readHash() {
@@ -57,7 +59,7 @@ function buildMap() {
       LEVELS.map(function (n, i) {
         return "<div><i style='background:" + LCOL[i] + "'></i>" + n + "</div>"; }).join("") +
       "<div style='margin-top:4px;color:#5b6770'>Districts filled, buildings as dots," +
-      "<br>roads as lines</div>";
+      "<br>roads as lines, facilities as squares</div>";
     return d;
   };
   lg.addTo(map);
@@ -89,6 +91,18 @@ function rdPopup(p) {
     "<tr><td style='color:#5b6770'>Likelihood band</td><td>" + p.likelihood + "</td></tr>" +
     "</table>";
 }
+function facPopup(p) {
+  var lvl = p.risk_level === "NO BUILDING NEARBY"
+    ? "no building within 30 m"
+    : "<b>" + p.risk_level + "</b> (nearest building " + p.dist_m + " m)";
+  return "<b>" + (p.name || "Unnamed facility") + "</b><table>" +
+    "<tr><td style='color:#5b6770'>Type</td><td>" + (FAC_LABEL[p.subtype] || p.subtype) +
+      ", " + String(p.osm_tag).replace(/_/g, " ") + "</td></tr>" +
+    "<tr><td style='color:#5b6770'>Warning level here</td><td>" + lvl + "</td></tr>" +
+    "</table><div style='margin-top:6px;color:#5b6770;font-size:11.5px'>" +
+    "Critical facility from the OpenStreetMap extract of 6 April 2026.</div>";
+}
+
 function adPopup(a) {
   return "<b>Enumeration district " + a.ED_CODE + "</b><table>" +
     "<tr><td style='color:#5b6770'>Overall risk</td><td><b>" + a.risk_level + "</b></td></tr>" +
@@ -111,7 +125,7 @@ function draw() {
   adminById = {};
   c.admin.forEach(function (a) { adminById[a.ED_CODE] = a; });
 
-  [adminLayer, bldLayer, rdLayer].forEach(function (l) { if (l) map.removeLayer(l); });
+  [adminLayer, bldLayer, rdLayer, facLayer].forEach(function (l) { if (l) map.removeLayer(l); });
 
   adminLayer = L.geoJSON(D.admin_geom, {
     style: function (f) {
@@ -143,6 +157,19 @@ function draw() {
   });
   if (showBld) bldLayer.addTo(map);
 
+  if (c.facilities) {
+    facLayer = L.geoJSON(c.facilities, {
+      pointToLayer: function (f, ll) {
+        var p = f.properties;
+        return L.marker(ll, { icon: L.divIcon({
+          className: "", iconSize: [13, 13], iconAnchor: [6, 6],
+          html: "<div class='fac-icon' style='background:" + p.risk_color + "'></div>" }) });
+      },
+      onEachFeature: function (f, l) { l.bindPopup(facPopup(f.properties)); }
+    });
+    if (showFac) facLayer.addTo(map);
+  }
+
   var s = c.summary;
   var kv = document.getElementById("kv");
   kv.innerHTML = [
@@ -151,7 +178,10 @@ function draw() {
     ["Road segments in window", Object.keys(s.roads).reduce(function (t, k) {
       return t + s.roads[k]; }, 0).toLocaleString()],
     ["Enumeration districts", c.admin.length],
-    ["People at yellow or worse", Math.round(s.pop_yellow_plus).toLocaleString()]
+    ["People at yellow or worse", Math.round(s.pop_yellow_plus).toLocaleString()],
+    ["Critical facilities in window", (s.critical_buildings || 0) +
+      (c.facilities ? " buildings, " + c.facilities.features.length + " named" : "")],
+    ["Critical facilities at yellow or worse", s.critical_at_risk || 0]
   ].map(function (r) { return "<dt>" + r[0] + "</dt><dd>" + r[1] + "</dd>"; }).join("");
 
   var tb = document.getElementById("sttable");
@@ -187,6 +217,7 @@ function bindToggle(id, setter) {
 bindToggle("t-admin", function (v) { showAdmin = v; });
 bindToggle("t-bld", function (v) { showBld = v; });
 bindToggle("t-rds", function (v) { showRds = v; });
+bindToggle("t-fac", function (v) { showFac = v; });
 document.getElementById("prev").onclick = function () { idx = Math.max(idx - 1, 0); draw(); };
 document.getElementById("next").onclick = function () { idx = Math.min(idx + 1, CY.length - 1); draw(); };
 
