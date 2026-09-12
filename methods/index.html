@@ -14,11 +14,11 @@
   <div class="wrap head-row">
     <div>
       <h1>Method and data note</h1>
-      <p class="head-sub">Impact-based flood forecast, Barbados, Saint Thomas pilot</p>
+      <p class="head-sub">Impact-based flood forecast, Barbados. Two cases: Hurricane Tomas 2010 and August 2026</p>
     </div>
     <div class="head-meta">
-      <span>Version for the Barbados training, August 2026</span>
-      <span><a href="../">IBF viewer home</a> &nbsp; <a href="../saint-thomas/">The map</a></span>
+      <span>Version for the Barbados training, September 2026</span>
+      <span><a href="../">IBF viewer home</a> &nbsp; <a href="../tomas2010/">Tomas 2010 map</a> &nbsp; <a href="../aug2026/">August 2026 map</a></span>
     </div>
   </div>
 </header>
@@ -27,11 +27,13 @@
 
   <h2>1. What this product is</h2>
   <p>For every forecast cycle in which the flood inundation mapping (FIM) routine issues
-  products, the impact-based forecasting (IBF) routine scores each receptor in the Saint Thomas
+  products, the impact-based forecasting (IBF) routine scores each receptor in the product
   window against a likelihood by impact matrix and returns a warning colour. The output is a
-  map a forecaster or a responder can act on, together with a table of counts per district.
+  map a forecaster or a responder can act on, together with a table of counts per admin unit.
   It is produced from the same ensemble the FIM viewer displays, so the two are always
-  consistent with each other.</p>
+  consistent with each other. Two cases are published: Hurricane Tomas, one cycle on
+  30 October 2010 with flood maps for all eleven parishes and receptors island wide, and the
+  hindcast of 16 to 17 August 2026, three cycles for the Saint Thomas pilot window.</p>
 
   <h2>2. The adopted standard</h2>
   <p>The product follows Speight et al. (2018), <em>Journal of Flood Risk Management</em>
@@ -109,7 +111,36 @@
       JSON summary.</li>
   </ol>
 
-  <h2>5. Results for this event</h2>
+  <h2>5. Results, Hurricane Tomas, cycle 30 October 2010 00:00 UTC</h2>
+  <p>The run scored one GeoPackage per parish window, eleven in all. A window is the parish plus
+  a 250 m buffer, so a receptor near a boundary is scored in up to five windows; the viewer keeps
+  each receptor once, from the window of its own parish. Admin units in this case are the
+  parishes, with the 2021 parish population, and every one of the eleven comes out HIGH.
+  The 2010 census enumeration districts are carried as a context layer shaded by the people at
+  yellow or worse, counted from the receptors, and do not carry a matrix level of their own.</p>
+  <table>
+    <tr><th>Island totals</th><th>Yellow</th><th>Amber</th><th>Red</th><th>Yellow or worse</th></tr>
+    <tr><td>Buildings, of 204,727</td><td>19,966</td><td>5,790</td><td>1,987</td><td>27,743</td></tr>
+    <tr><td>Road segments, of 22,509</td><td>3,080</td><td>888</td><td>333</td><td>4,301, 719 km</td></tr>
+    <tr><td>People, of 269,090 in the stock</td><td colspan="3"></td><td>38,865</td></tr>
+    <tr><td>Critical facility buildings, of 528</td><td colspan="3">14 at amber or worse</td><td>74</td></tr>
+  </table>
+  <table>
+    <tr><th>Parish</th><th>Buildings yellow</th><th>amber</th><th>red</th><th>Roads yellow or worse</th><th>People at yellow or worse</th></tr>
+    <tr><td>Saint Michael</td><td>6,778</td><td>2,141</td><td>646</td><td>1,139</td><td>12,970</td></tr>
+    <tr><td>Christ Church</td><td>4,820</td><td>1,302</td><td>475</td><td>1,082</td><td>9,994</td></tr>
+    <tr><td>Saint Philip</td><td>2,754</td><td>585</td><td>313</td><td>700</td><td>4,743</td></tr>
+    <tr><td>Saint James</td><td>2,061</td><td>503</td><td>106</td><td>465</td><td>3,747</td></tr>
+    <tr><td>Saint George</td><td>1,017</td><td>273</td><td>160</td><td>231</td><td>2,111</td></tr>
+    <tr><td>Saint Peter</td><td>890</td><td>467</td><td>56</td><td>202</td><td>1,990</td></tr>
+    <tr><td>Saint Thomas</td><td>652</td><td>202</td><td>87</td><td>195</td><td>1,315</td></tr>
+    <tr><td>Saint Lucy</td><td>342</td><td>129</td><td>47</td><td>84</td><td>688</td></tr>
+    <tr><td>Saint John</td><td>330</td><td>62</td><td>46</td><td>105</td><td>600</td></tr>
+    <tr><td>Saint Andrew</td><td>190</td><td>100</td><td>8</td><td>52</td><td>358</td></tr>
+    <tr><td>Saint Joseph</td><td>132</td><td>26</td><td>43</td><td>46</td><td>349</td></tr>
+  </table>
+
+  <h2>6. Results, hindcast of 16 to 17 August 2026, Saint Thomas window</h2>
   <table>
     <tr><th>Cycle, UTC</th><th>Buildings yellow</th><th>Buildings amber</th><th>Buildings red</th><th>Roads yellow or worse</th><th>Districts medium</th><th>People at yellow or worse</th><th>Critical facilities at yellow or worse</th></tr>
     <tr><td>17 Aug 13:00</td><td>247</td><td>13</td><td>1</td><td>59</td><td>4</td><td>431</td><td>0 of 49</td></tr>
@@ -124,11 +155,12 @@
   that grows, peaks and recedes over four hours, and that the peak in <em>impact</em> at 14:00
   does not fall on the same cycle as the single most severe <em>receptor</em>, at 13:00.</p>
 
-  <h2>6. Open items</h2>
+  <h2>7. Open items</h2>
   <ul>
     <li>The census population vintage is 2010 for the enumeration districts, while the parish
-      layer carries 2021 Barbados Statistical Service estimates. The two are not mixed in one
-      product; the vintage difference should be resolved with the national partners.</li>
+      layer carries 2021 Barbados Statistical Service estimates. The August 2026 case uses the
+      districts and the Tomas case the parishes, so the two cases are not on one vintage; the
+      difference should be resolved with the national partners.</li>
     <li>Velocity is not available for these cycles, so the flood hazard rating upgrade used in
       the earlier island wide scenario product is not applied here.</li>
     <li>Critical facilities are now carried, from the OpenStreetMap extract, but the coverage is

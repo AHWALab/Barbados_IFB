@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBF Map. Barbados, Hurricane Tomas 2010</title>
+<meta name="description" content="Impact-based flood forecast for the whole of Barbados, Hurricane Tomas, forecast cycle of 30 October 2010 00:00 UTC. Buildings, road segments and parishes coloured by the flood risk matrix.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23F58220'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../assets/vendor/leaflet.css">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-row">
+    <div>
+      <h1>Impact-Based Flood Forecast</h1>
+      <p class="head-sub">Barbados, whole island. Hurricane Tomas, forecast cycle of 30 October 2010 00:00 UTC</p>
+    </div>
+    <div class="head-meta">
+      <span>204,727 buildings, 22,509 road segments, 11 parishes, 366 critical facilities</span>
+      <span>One cycle, 24 h horizon, eleven parish flood maps sampled onto every receptor</span>
+      <span><a href="../">Both events</a> &nbsp; <a href="../aug2026/">August 2026 case</a> &nbsp; <a href="../methods/">Method</a> &nbsp;
+        <a href="https://ahwalab.github.io/Barbados_fim/tomas2010/">Flood maps</a> &nbsp;
+        <a href="https://ahwalab.github.io/Barbados_warnings/tomas2010/">Flood potential</a></span>
+    </div>
+  </div>
+</header>
+
+<div class="context-band">
+  <div class="wrap">
+    Warning colour comes from the Flood Risk Matrix of the Scottish Flood Forecasting Service
+    and the UK Flood Guidance Statement, as applied in Speight et al. (2018): likelihood from
+    the FIM ensemble exceedance grids, impact severity from the depth reached at each receptor.
+    Green is business as usual, yellow be aware, amber be prepared, red take action.
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="controls" aria-label="View controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Show at least</span>
+      <div class="seg" id="seg-min">
+        <button data-m="1">Yellow and above</button>
+        <button data-m="2" class="on">Amber and above</button>
+        <button data-m="3">Red only</button>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Layers</span>
+      <button class="toggle on" id="t-admin">Parishes</button>
+      <button class="toggle" id="t-eds" title="2010 census enumeration districts shaded by the people at yellow or worse">Districts</button>
+      <button class="toggle on" id="t-bld">Buildings</button>
+      <button class="toggle on" id="t-rds">Roads</button>
+      <button class="toggle on" id="t-fac" title="Health, education and civic facilities from the OpenStreetMap extract, drawn when they reach the level of the Show at least filter">Facilities</button>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Cycle</span>
+      <span class="static">30 October 2010, 00:00 UTC, the only cycle of this case</span>
+    </div>
+  </section>
+
+  <main class="main">
+    <div class="map-col">
+      <div class="mapbox" id="mapbox"><div id="map"></div></div>
+      <div class="map-caption">Buildings are drawn at their representative point so tens of
+        thousands can be read at once; the default shows amber and red, switch to yellow and
+        above to see all 27,743 receptors at yellow or worse. Click any feature for its
+        probabilities and severity. Zoom in before switching on the districts.</div>
+    </div>
+
+    <aside class="side">
+      <div class="cyc-head">
+        <h2 id="cyctitle"></h2>
+        <span class="badge trig">receptor product</span>
+      </div>
+      <dl class="kv" id="kv"></dl>
+      <table class="st" id="sttable"></table>
+      <h3 class="sub">By parish</h3>
+      <div class="tablewrap"><table class="pt" id="parishtable"></table></div>
+      <p class="note"><strong>Severity</strong> is graded on the depth a receptor reaches:
+        minor from 0.10 m, significant from 0.30 m, severe from 0.70 m. <strong>Likelihood</strong>
+        is the exceedance probability at that depth, in the bands very low under 20 percent,
+        low 20 to 40, medium 40 to 60, high above 60. A receptor takes the worst matrix cell
+        across its severity specific probabilities. Parish risk aggregates its receptors and
+        is then read against the same matrix.</p>
+      <div class="flag">
+        <strong>Every parish is red.</strong> The run scored each parish on its own window, and
+        with 120 to 380 mm of rain in every member the impact thresholds of the matrix are passed
+        everywhere, so all eleven parishes come out HIGH. The parish fill is kept light on
+        purpose: the information is in the receptors. Switch on the districts layer to see the
+        609 enumeration districts shaded by the people at yellow or worse, counted from the
+        receptors.
+      </div>
+      <div class="flag">
+        <strong>One count per receptor.</strong> The run writes one GeoPackage per parish
+        window, and a window is the parish plus a 250 m buffer, so a receptor near a boundary is
+        scored in up to five windows. The island totals here keep each receptor once, from the
+        window of its own parish. The per window summaries in the run outputs add up to more.
+      </div>
+      <div class="flag">
+        <strong>Critical facilities.</strong> Health, education and civic facilities come from
+        the OpenStreetMap extract of 6 April 2026. Each takes the worst warning level of the
+        buildings within 30 m of it. 528 buildings carry the critical flag in the receptor
+        stock; 74 of them are at yellow or worse and 14 at amber or worse in this cycle.
+      </div>
+    </aside>
+  </main>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap foot-row">
+    <div>
+      <strong>AHWA Laboratory, The University of Iowa</strong><br>
+      EWS-F project, funded by the WMO
+    </div>
+    <div class="foot-right">
+      Receptors from Overture Maps, admin units from the Barbados parish layer, districts from the 2010 census.<br>
+      Training demonstration. Not an operational warning product.
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/vendor/leaflet.js"></script>
+<script src="data/ibf_cycles.js"></script>
+<script src="../assets/js/ibf.js"></script>
+</body>
+</html>
